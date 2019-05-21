@@ -1,9 +1,9 @@
 Package: likerrt
 Type: Package
 Title: Convenient and tidy compliant functions for Likert scale data (psychological surveys).
-Version: 0.1.0
-Author: gynt
-Maintainer: The package maintainer <yourself@somewhere.net>
+Version: 0.1.2
+Author: Gootjes
+Maintainer: Gootjes <yourself@somewhere.net>
 Description: Provides convenient and tidy compliant functions for common Likert scale data stuff such as recoding.
     Moreover, it provides pretty ggplot2 graphs for scores.
 License: What license is it under?
@@ -13,3 +13,6 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.1
 Suggests: 
     testthat
+Imports:
+    tidyselect,
+    rlang

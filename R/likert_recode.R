@@ -1,23 +1,20 @@
-
+#' @importFrom tidyselect vars_select
 #' @importFrom rlang as_name
 #' @importFrom rlang quos
 #' @export
 likert_recode <- function(.data, ..., .spec, .default = NULL, .missing = NULL) {
   dots <- quos(...)
 
-  if(length(dots) > 0) {
+  vnames <- vars_select(colnames(.data), !!!dots)
 
-    for(i in seq_along(dots)) {
-      vname <- as_name(dots[[i]])
-      vattr <- attributes(.data[[vname]])
+  for(vname in vnames) {
+    vattr <- attributes(.data[[vname]])
 
-      if(!is_likerrt(vattr)) {
-        stop("Not a likerrt.likert")
-      }
-
-      .data[[vname]] <- likert_recode.likerrt.likert(x = .data[[vname]], spec = .spec, .default = .default, .missing = .missing)
+    if(!is_haven_labelled(vattr)) {
+      stop("Not a likert")
     }
 
+    .data[[vname]] <- likert_recode.likerrt.likert(x = .data[[vname]], spec = .spec, .default = .default, .missing = .missing)
   }
 
   .data

@@ -1,16 +1,18 @@
 
-
+#' @importFrom tidyselect vars_select
 #' @importFrom rlang as_name
 #' @importFrom rlang quos
 #' @export
-likert_scale <- function(.data, ..., .name, .label, .drop = FALSE, na.rm = FALSE) {
+likert_scale <- function(.data, ..., .name, .label = NULL, .drop = FALSE, na.rm = FALSE) {
   dots <- quos(...)
 
-  varnames <- sapply(X = dots, FUN = function(v) as_name(v))
+  if(missing(.name)) stop("A name must be specified")
 
-  .data[[.name]] <- structure(rowMeans(.data[varnames], na.rm = na.rm), label = .label)
+  vnames <- vars_select(colnames(.data), !!!dots)
 
-  if(.drop) .data[varnames] <- NULL
+  if(length(vnames) == 0) stop("At least one variable must be specified")
 
-  .data
+  .data[[.name]] <- structure(rowMeans(.data[vnames], na.rm = na.rm), label = .label)
+
+  if(.drop) .data[[.name]] else .data
 }
