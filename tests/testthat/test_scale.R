@@ -1,5 +1,5 @@
 
-context("as_likert")
+context("scale")
 
 library(tidyverse)
 library(rlang)
