@@ -4,5 +4,6 @@ is_haven_labelled <- function(a) {
 }
 
 is_likerrt <- function(a) {
-  "likerrt.likert" %in% a$class & "labels" %in% names(a)
+  "likerrt_likert" %in% a$class & "labels" %in% names(a)
 }
+

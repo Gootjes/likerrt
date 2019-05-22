@@ -3,13 +3,13 @@
 #' @importFrom rlang quos
 #' @importFrom haven labelled
 #' @export
-as_likert <- function(.data, ..., .label = NULL, .labels = NULL) {
+as_likert <- function(.data, ..., .label = NULL, .labels = NULL, .complement = TRUE) {
   dots <- quos(...)
 
   if(length(dots) > 0) {
     for(i in seq_along(dots)) {
       vname <- as_name(dots[[i]])
-      vattr <<- attributes(.data[[vname]])
+      vattr <- attributes(.data[[vname]])
 
       if(is_likerrt(vattr)) {
         next
@@ -20,16 +20,34 @@ as_likert <- function(.data, ..., .label = NULL, .labels = NULL) {
           stop(vname, " is not a haven labelled and no labels are specified")
         }
 
+        if(.complement == TRUE) {
+          comp <- c()
+          for(v in unique(.data[[vname]])) {
+            if(v %in% .labels) {
+
+            } else {
+              comp[[as.character(v)]] <- v
+            }
+          }
+
+          .labels <- sort(c(.labels, comp))
+        }
+
         labs <- sapply(X = seq_along(.labels), FUN = function(i) {
           if(names(.labels)[i] == "") paste(.labels[i]) else names(.labels)[i]
         })
 
         names(.labels) <- labs
 
+        attr(.labels, which = "class") <- "likerrt_labels"
+
+        if(!is.null(.label))
+          attr(.label, which = "class") <- "likerrt_label"
+
         .data[[vname]] <- labelled(.data[[vname]], labels = .labels, label = .label)
       }
 
-      attributes(.data[[vname]])$class <- c("likerrt.likert", attributes(.data[[vname]])$class)
+      attributes(.data[[vname]])$class <- c("likerrt_likert", attributes(.data[[vname]])$class)
     }
 
   }

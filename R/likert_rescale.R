@@ -14,7 +14,8 @@ likert_rescale <- function(.data, ..., .min, .max, .suffix = "") {
   if(length(vnames) == 0) stop("At least one variable must be specified")
 
   for(vname in vnames) {
-    a <<- .data[[vname]]
+    a <- .data[[vname]]
+
     oldRange <- attributes(.data[[vname]])$labels
     #oldLabel <- get_label(.data[[vname]])
     oldMin <- min(oldRange)
