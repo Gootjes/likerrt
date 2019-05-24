@@ -20,5 +20,5 @@ testthat::expect_equal(
                      row.names = c(NA, -7L),
                      class = "data.frame") %>%
     as_likert(A, .label = "Variable A", .labels = c("Do not agree" = 1, 2, 3, 4, 5, 6, "Does agree" = 7)) %>%
-    pluck("A") %>% attr(which = "labels"), expected = c(`Do not agree` = 1, `2` = 2, `3` = 3, `4` = 4, `5` = 5, `6` = 6,
-                                                        `Does agree` = 7))
+    pluck("A") %>% attr(which = "labels"), expected = structure(c(`Do not agree` = 1, `2` = 2, `3` = 3, `4` = 4, `5` = 5,
+                                                                  `6` = 6, `Does agree` = 7), class = "likerrt_labels"))

@@ -10,48 +10,92 @@ as_likert <- function(.data, ..., .label = NULL, .labels = NULL, .complement = T
   vnames <- vars_select(colnames(.data), !!!dots)
 
   for(vname in vnames) {
-    vattr <- attributes(.data[[vname]])
 
-    if(is_likerrt(vattr)) {
+    if(is_likerrt(.data[[vname]])) {
       next
     }
 
-    if(!is_haven_labelled(vattr)) {
-      if(is.null(.labels)) {
-        stop(vname, " is not a haven labelled and no labels are specified")
+
+    el <- get_label(.data[[vname]])
+
+    if(is.null(el)) {
+      if(is.null(.label)) {
+        #.label <- ""
+        #stop(vname, " cannot be coerced to likert as no label is specified and .label is NULL")
       }
-
-      if(.complement == TRUE) {
-        comp <- c()
-        for(v in unique(.data[[vname]])) {
-          if(v %in% .labels) {
-
-          } else {
-            comp[[as.character(v)]] <- v
-          }
-        }
-
-        .labels <- sort(c(.labels, comp))
+    } else {
+      if(is.null(.label)) {
+        .label <- as_likerrt_label(el)
       }
-
-      labs <- sapply(X = seq_along(.labels), FUN = function(i) {
-        if(names(.labels)[i] == "") paste(.labels[i]) else names(.labels)[i]
-      })
-
-      names(.labels) <- labs
-
-      attr(.labels, which = "class") <- "likerrt_labels"
-
-      if(!is.null(.label))
-        attr(.label, which = "class") <- "likerrt_label"
-
-      .data[[vname]] <- labelled(.data[[vname]], labels = .labels, label = .label)
     }
 
-    attributes(.data[[vname]])$class <- c("likerrt_likert", attributes(.data[[vname]])$class)
+
+    els <- get_labels(.data[[vname]])
+
+    if(is.null(els)) {
+      if(is.null(.labels)) {
+        stop(vname, " cannot be coerced to likert as no labels are specified and .labels is NULL")
+      }
+    } else {
+      if(is.null(.labels)) {
+        .labels <- as_likerrt_labels(els)
+      }
+    }
+
+    .labels <- prettify_labels(.labels, .data[[vname]], .complement = .complement)
+
+    if(!is.null(.label))
+      .data[[vname]] <- set_label(.data[[vname]], .value = .label)
+    .data[[vname]] <- set_labels(.data[[vname]], .value = .labels)
+
+    .data[[vname]] <- set_as_likert(.data[[vname]])
+
   }
-
-
 
   .data
 }
+
+set_as_likert <- function(x) {
+  attr(x, which = "class") <- union(c("likerrt_likert", "haven_labelled"), class(x))
+  x
+}
+
+prettify_labels <- function(ls, x = NULL, .complement) {
+  if(.complement == TRUE) {
+
+    if(is.null(x)) {
+      stop("x cannot be NULL when .complement is TRUE")
+    }
+
+    comp <- c()
+    for(v in unique(x)) {
+      if(v %in% ls) {
+
+      } else {
+        comp[[as.character(v)]] <- v
+      }
+    }
+
+    ls <- sort(c(ls, comp))
+  }
+
+  labs <- sapply(X = seq_along(ls), FUN = function(i) {
+    if(names(ls)[i] == "") paste(ls[i]) else names(ls)[i]
+  })
+
+  names(ls) <- labs
+
+  ls
+}
+
+#' IDEA: convert to `label<-` <- function(x, value) {}
+as_likerrt_label <- function(x) {
+  attr(x, which = "class") <- union("likerrt_label", attr(x, which = "class", exact = TRUE))
+  x
+}
+
+as_likerrt_labels <- function(x) {
+  attr(x, which = "class") <- union("likerrt_labels", attr(x, which = "class", exact = TRUE))
+  x
+}
+

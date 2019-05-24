@@ -118,3 +118,24 @@ set_attr <- function(x, dots = list(), .key, .value) {
 
   x
 }
+
+label <- function(x) {
+  attr(x, which = "label", exact = TRUE)
+}
+
+labels <- function(x) {
+  attr(x, which = "labels", exact = TRUE)
+}
+
+`label<-` <- function(x, value) {
+  attr(value, which = "class") <- union("likerrt_label", attr(value, which = "class", exact = TRUE))
+  attr(x, which = "label") <- value
+}
+
+`labels<-` <- function(x, value) {
+
+  ls <- prettify_labels(value)
+
+  attr(value, which = "class") <- union("likerrt_labels", attr(value, which = "class", exact = TRUE))
+  attr(x, which = "labels") <- value
+}

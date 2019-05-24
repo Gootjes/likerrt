@@ -16,17 +16,39 @@ likert_rescale <- function(.data, ..., .min, .max, .suffix = "") {
   for(vname in vnames) {
     a <- .data[[vname]]
 
+    if(!is_likerrt(a)) {
+      stop("variable ", vname, " is not of class likerrt_likert")
+    }
+
     oldRange <- attributes(.data[[vname]])$labels
     #oldLabel <- get_label(.data[[vname]])
+    if(is.null(oldRange))
+      stop("variable", vname, "has no labels attribute")
     oldMin <- min(oldRange)
+    if(is.infinite(oldMin))
+      stop("minimal value of the labels of ", vname, " is infinite\n", oldRange)
+    if(is.na(oldMin))
+      stop("minimal value of the labels of ", vname, " is NA\n", oldRange)
     oldMax <- max(oldRange)
+    if(is.infinite(oldMax))
+      stop("maximal value of the labels of ", vname, " is infinite\n", oldRange)
+    if(is.na(oldMax))
+      stop("maximal value of the labels of ", vname, " is NA\n", oldRange)
 
     oldValues <- .data[[vname]]
 
     newvname <- paste(vname, .suffix, sep = "")
-    .data[[newvname]] <- (((oldValues - oldMin) / (oldMax-oldMin)) * (.max-.min)) + .min
+    .data[[newvname]] <- rescale(oldValues, oldMin, oldMax, .min, .max)
     attributes(.data[[newvname]]) <- NULL
   }
 
   .data
+}
+
+check_valid_labels <- function() {
+
+}
+
+rescale <- function(x, min, max, .min, .max) {
+  (((x - min) / (max-min)) * (.max-.min)) + .min
 }

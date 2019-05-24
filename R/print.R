@@ -5,7 +5,11 @@ haven::as_factor
 
 #' @export
 print.likerrt_labels <- function(x, ...) {
-  d <- data.frame(value = unclass(x), label = names(x), stringsAsFactors = FALSE)
+  nx <- names(x)
+  if(is.null(nx)) {
+    nx <- rep(NA, length(x))
+  }
+  d <- data.frame(value = unclass(x), label = nx, stringsAsFactors = FALSE)
   print(d, row.names = FALSE)
 }
 
