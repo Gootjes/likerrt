@@ -88,7 +88,7 @@ prettify_labels <- function(ls, x = NULL, .complement) {
   ls
 }
 
-#' IDEA: convert to `label<-` <- function(x, value) {}
+# IDEA: convert to `label<-` <- function(x, value) {}
 as_likerrt_label <- function(x) {
   attr(x, which = "class") <- union("likerrt_label", attr(x, which = "class", exact = TRUE))
   x
