@@ -20,19 +20,21 @@ likert_recode <- function(.data, ..., .spec, .default = NULL, .missing = NULL) {
 }
 
 #' @export
-likert_recode.likerrt.likert <- function(x, spec, .default = NULL, .missing = NULL) {
+likert_recode.likerrt.likert <- function(x, spec, .default = NULL, .missing = NULL, .na_treatment = "identity") {
   srcclass <- class(as.vector(x))
 
   conv <- data.frame(from = as(names(spec), srcclass), to = as(spec, srcclass))
 
   xnew <- sapply(X = x, FUN = function(v){
+
+    if(is.na(v)) return(NA)
+
     ifrom <- which(v == conv$from)
     if(length(ifrom) != 1) {
       stop("Illegal matching for ", v)
     }
 
-    to <- conv$to[ifrom]
-
+    conv$to[ifrom]
   })
 
   attributes(xnew) <- attributes(x)

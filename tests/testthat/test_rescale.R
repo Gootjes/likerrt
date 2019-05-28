@@ -14,3 +14,9 @@ testthat::expect_equal(object =
 
 
 
+d[2,"A"] <- NA
+
+testthat::expect_equal(object =
+                         d %>%
+                         likert_rescale(A, B, C, .min = 1, .max = 7),
+                       expected = structure(list(A = c(1, NA, 7), B = c(4, 7, 1), C = c(7, 1, 4)), row.names = c(NA, -3L), class = "data.frame"))
