@@ -99,3 +99,13 @@ as_likerrt_labels <- function(x) {
   x
 }
 
+try_as_likert <- function(x, vname) {
+  e <- environment()
+  e$x <- x
+  tryCatch({
+    e$x <- as_likert(x)
+  }, error = function(e) {
+    stop("variable ", vname, " is not of class likerrt_likert and cannot be coerced to it")
+  })
+  e$x
+}

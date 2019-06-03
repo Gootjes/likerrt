@@ -9,8 +9,8 @@ likert_recode <- function(.data, ..., .spec, .default = NULL, .missing = NULL) {
 
   for(vname in vnames) {
 
-    if(!is_haven_labelled(.data[[vname]])) {
-      stop("variable ", vname, " is not a likert")
+    if(!is_likerrt(.data[[vname]])) {
+      .data[[vname]] <- try_as_likert(.data[[vname]], vname)
     }
 
     .data[[vname]] <- likert_recode.likerrt.likert(x = .data[[vname]], spec = .spec, .default = .default, .missing = .missing)

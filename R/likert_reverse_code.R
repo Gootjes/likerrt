@@ -10,8 +10,8 @@ likert_reverse_code <- function(.data, ..., .suffix = "") {
 
   for(vname in vnames) {
 
-    if(!is_haven_labelled(.data[[vname]])) {
-      stop("Not a likert")
+    if(!is_likerrt(.data[[vname]])) {
+      .data[[vname]] <- try_as_likert(.data[[vname]], vname)
     }
 
     labs <- get_labels(.data[[vname]])

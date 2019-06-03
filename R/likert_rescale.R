@@ -14,10 +14,9 @@ likert_rescale <- function(.data, ..., .min, .max, .suffix = "") {
   if(length(vnames) == 0) stop("At least one variable must be specified")
 
   for(vname in vnames) {
-    a <- .data[[vname]]
 
-    if(!is_likerrt(a)) {
-      stop("variable ", vname, " is not of class likerrt_likert")
+    if(!is_likerrt(.data[[vname]])) {
+      .data[[vname]] <- try_as_likert(.data[[vname]], vname)
     }
 
     oldRange <- attributes(.data[[vname]])$labels
