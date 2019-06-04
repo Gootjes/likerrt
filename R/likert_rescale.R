@@ -3,7 +3,7 @@
 #' @importFrom rlang as_name
 #' @importFrom rlang quos
 #' @export
-likert_rescale <- function(.data, ..., .min, .max, .suffix = "") {
+likert_rescale <- function(.data, ..., .min, .max, .suffix = getOption("likerrt.rescale.suffix", ""), .label_suffix = getOption("likerrt.rescale.label_suffix", " (recoded)")) {
   dots <- quos(...)
 
   if(missing(.min)) stop("A min must be specified")
@@ -19,8 +19,8 @@ likert_rescale <- function(.data, ..., .min, .max, .suffix = "") {
       .data[[vname]] <- try_as_likert(.data[[vname]], vname)
     }
 
-    oldRange <- attributes(.data[[vname]])$labels
-    #oldLabel <- get_label(.data[[vname]])
+    oldRange <- get_labels(.data[[vname]])
+
     if(is.null(oldRange))
       stop("variable", vname, "has no labels attribute")
     oldMin <- min(oldRange)
@@ -38,7 +38,11 @@ likert_rescale <- function(.data, ..., .min, .max, .suffix = "") {
 
     newvname <- paste(vname, .suffix, sep = "")
     .data[[newvname]] <- rescale(oldValues, oldMin, oldMax, .min, .max)
-    attributes(.data[[newvname]]) <- NULL
+    .data[[newvname]] <- set_labels(.data[[newvname]], .value = rescale(oldRange, oldMin, oldMax, .min, .max))
+
+    oldLabel <- get_label(.data[[vname]])
+    if(!is.null(oldLabel))
+      .data[[newvname]] <- set_label(.data[[newvname]], .value = paste(oldLabel, .label_suffix, sep = ""))
   }
 
   .data

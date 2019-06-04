@@ -1,7 +1,7 @@
 Package: likerrt
 Type: Package
 Title: Convenient and tidy compliant functions for Likert scale data (psychological surveys).
-Version: 0.1.8
+Version: 0.1.9
 Author: Gootjes
 Maintainer: Gootjes <yourself@somewhere.net>
 Description: Provides convenient and tidy compliant functions for common Likert scale data stuff such as recoding.
