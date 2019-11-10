@@ -439,9 +439,8 @@ testthat::expect_error(
     select(1) %>%
     likert_scale(
       A,
-      B,
       .name = "C",
       .label = "Scale of A and B",
-      .strictness = "foo"
+      .strictness = "none"
     )
 )

@@ -3,11 +3,22 @@
 #' @importFrom rlang as_name
 #' @importFrom rlang quos
 #' @export
-likert_rescale <- function(.data, ..., .min, .max, .suffix = getOption("likerrt.rescale.suffix", ""), .label_suffix = getOption("likerrt.rescale.label_suffix", " (recoded)")) {
+likert_rescale <-
+  function(.data,
+           ...,
+           .min,
+           .max,
+           .suffix = getOption("likerrt.rescale.suffix", ""),
+           .label_suffix = getOption("likerrt.rescale.label_suffix", " (recoded)")) {
+
   dots <- quos(...)
 
   if(missing(.min)) stop("A min must be specified")
   if(missing(.max)) stop("A max must be specified")
+  if(length(.min) > 1) stop(".min must be a single value")
+  if(length(.max) > 1) stop(".max must be a single value")
+  if(.min %in% c(Inf, NA, NaN)) stop(".min must be a real value")
+  if(.max %in% c(Inf, NA, NaN)) stop(".min must be a real value")
 
   vnames <- vars_select(colnames(.data), !!!dots)
 
