@@ -436,6 +436,7 @@ testthat::expect_error(
     as_likert(B, .labels = c(
       "Not at all" = 1, "A lot" = 10
     )) %>%
+    select(1) %>%
     likert_scale(
       A,
       B,

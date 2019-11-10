@@ -13,7 +13,7 @@ likert_scale <- function(.data, ..., .name, .label = NULL, .drop = missing(.name
 
   vnames <- vars_select(colnames(.data), !!!dots)
 
-  if(length(vnames) == 0) stop("At least one variable must be specified")
+  if(length(vnames) <= 1) stop("At least two variables must be specified")
 
   def <- equal_labels(get_labels(.data[vnames]))
 
