@@ -3,7 +3,7 @@
 #' @importFrom rlang as_name
 #' @importFrom rlang quos
 #' @export
-likert_scale <- function(.data, ..., .name, .label = NULL, .drop = missing(.name), na.rm = FALSE, .strictness = c("equal")) {
+likert_scale <- function(.data, ..., .name, .label = NULL, .drop = missing(.name), na.rm = FALSE, .strictness = c("labels", "values")) {
   dots <- quos(...)
 
   if(missing(.name) & .drop == FALSE) stop("A name must be specified, or drop must be set to TRUE")
@@ -13,8 +13,23 @@ likert_scale <- function(.data, ..., .name, .label = NULL, .drop = missing(.name
   if(length(vnames) == 0) stop("At least one variable must be specified")
 
   def <- equal_labels(get_labels(.data[vnames]))
-  if(!all(.strictness %in% def)) {
-    stop("strictness assumption of value ranges for likert items was not met: ", .strictness)
+
+  if(is.null(.strictness)) .strictness <- "none"
+
+  if(length(setdiff(.strictness, "none")) > 0) { #if strictness other than 'none' was specified
+    unmet_assumptions <- setdiff(.strictness, def)
+
+    if("labels" %in% unmet_assumptions) {
+      stop("Not all variables have value labels that are equal. (To drop this assumption, consider .strictness = c('values')")
+    }
+
+    if("values" %in% unmet_assumptions) {
+      stop("Not all variables have values that are equal. (To drop this assumption, consider .strictness = c('range')")
+    }
+
+    if("range" %in% unmet_assumptions) {
+      stop("Not all variables have values that are in the same range. (To drop this assumption, use .strictness = c('none')")
+    }
   }
 
   v <- structure(rowMeans(.data[vnames], na.rm = na.rm), label = .label)
@@ -40,6 +55,27 @@ equal_labels <- function(ls) {
 
   def <- c("none")
 
+
+  eq <- FALSE
+  for(i in 2:length(ls)) {
+    a <- ls[[1]]
+    b <- ls[[i]]
+
+    if(length(names(a)) != length(names(b))) {
+      eq <- FALSE
+      break
+    } else if(all(names(a) == names(b))){
+      eq <- TRUE
+    } else {
+      eq <- FALSE
+      break
+    }
+  }
+  if(eq) {
+    def <- append(def, "labels")
+  }
+
+
   eq <- FALSE
   for(i in 2:length(ls)) {
     a <- ls[[1]]
@@ -52,7 +88,7 @@ equal_labels <- function(ls) {
     }
   }
   if(eq) {
-    def <- append(def, "equal")
+    def <- append(def, "values")
   }
 
   eq <- FALSE
