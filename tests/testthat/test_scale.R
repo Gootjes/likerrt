@@ -426,3 +426,21 @@ testthat::expect_equal(
     class = "data.frame"
   )
 )
+
+testthat::expect_error(
+  object =
+    data.frame(A = c(1:7, 1:3), B = 1:10) %>%
+    as_likert(A, .labels = c(
+      "Disagree" = 1, "Agree" = 7
+    )) %>%
+    as_likert(B, .labels = c(
+      "Not at all" = 1, "A lot" = 10
+    )) %>%
+    likert_scale(
+      A,
+      B,
+      .name = "C",
+      .label = "Scale of A and B",
+      .strictness = "foo"
+    )
+)

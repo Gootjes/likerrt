@@ -6,6 +6,9 @@
 likert_scale <- function(.data, ..., .name, .label = NULL, .drop = missing(.name), na.rm = FALSE, .strictness = c("labels", "values")) {
   dots <- quos(...)
 
+  unknowns <- setdiff(.strictness, c("labels", "values", "range", "none"))
+  if(length(unknowns) > 0) stop("Unknown .stricness assumption specified: ", unknowns)
+
   if(missing(.name) & .drop == FALSE) stop("A name must be specified, or drop must be set to TRUE")
 
   vnames <- vars_select(colnames(.data), !!!dots)
