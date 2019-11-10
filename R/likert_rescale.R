@@ -27,7 +27,7 @@ likert_rescale <-
   for(vname in vnames) {
 
     if(!is_likerrt(.data[[vname]])) {
-      .data[[vname]] <- try_as_likert(.data[[vname]], vname)
+      .data <- try_as_likert(.data, vname)
     }
 
     oldRange <- get_labels(.data[[vname]])

@@ -1,5 +1,6 @@
 
 
+
 context("rescale")
 
 library(tidyverse)
@@ -44,7 +45,7 @@ testthat::expect_equal(
                   "haven_labelled", "numeric")
       )
     ),
-    row.names = c(NA,-3L),
+    row.names = c(NA, -3L),
     class = "data.frame"
   )
 )
@@ -87,7 +88,7 @@ testthat::expect_equal(
                   "haven_labelled", "numeric")
       )
     ),
-    row.names = c(NA,-3L),
+    row.names = c(NA, -3L),
     class = "data.frame"
   )
 )
@@ -106,7 +107,7 @@ a <- structure(list(A = structure(
   ),
   class = c("haven_labelled")
 )),
-row.names = c(NA,-7L),
+row.names = c(NA, -7L),
 class = "data.frame") %>%
   likert_rescale(A, .min = 1, .max = 3) %>% pluck("A") %>% round(2)
 
@@ -126,7 +127,7 @@ b <-
       ),
       class = "likerrt_labels"
     ),
-    class = "haven_labelled"
+    class = c("likerrt_likert", "haven_labelled")
   )
 
 
