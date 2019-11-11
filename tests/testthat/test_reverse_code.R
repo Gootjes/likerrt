@@ -1,5 +1,6 @@
 
 
+
 context("likert_reverse_code")
 
 library(tidyverse)
@@ -27,7 +28,36 @@ testthat::expect_equal(
 )
 
 testthat::expect_equal(
-  object = data.frame(A = sample(c(1:7, NA), 100, replace = T)) %>%
+  object = data.frame(A = rep(c(1:7, NA), times = 2)) %>%
+    as_likert(
+      A,
+      .label = "Variable A",
+      .labels = c("Do not agree" = 1, 2, 3, 4, 5, 6, "Does agree" = 7)
+    ) %>%
+    likert_reverse_code(A) %>%
+    pluck("A") %>% is.na(),
+  expected = c(
+    FALSE,
+    FALSE,
+    FALSE,
+    FALSE,
+    FALSE,
+    FALSE,
+    FALSE,
+    TRUE,
+    FALSE,
+    FALSE,
+    FALSE,
+    FALSE,
+    FALSE,
+    FALSE,
+    FALSE,
+    TRUE
+  )
+)
+
+testthat::expect_equal(
+  object = data.frame(A = rep(c(1:7, NA), times = 2)) %>%
     as_likert(
       A,
       .label = "Variable A",
