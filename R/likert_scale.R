@@ -45,7 +45,6 @@ likert_scale <- function(.data, ..., .name, .label = NULL, .drop = missing(.name
   }
 }
 
-#' @importFrom base setequal
 equal_labels <- function(ls) {
   nulls <- which(sapply(ls, is.null))
   if(length(nulls) > 0) {
